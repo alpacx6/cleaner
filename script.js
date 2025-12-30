@@ -1,10 +1,13 @@
-const canvas = document.getElementById("gameCanvas");
+ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 
+const startScreen = document.getElementById("startScreen");
+const howToPlayScreen = document.getElementById("howToPlayScreen");
+const gameOverlay = document.getElementById("overlay");
 
 const gameContainer = document.getElementById("gameContainer");
 const centerTime = document.getElementById("centerTime"); // [수정] 긴장감 효과용
@@ -17,7 +20,8 @@ const SAND_Y = HEIGHT * 0.82;
 const PANEL_MARGIN = 10;
 const PANEL_WIDTH = 180;
 const PLAY_MIN_X = PANEL_MARGIN + PANEL_WIDTH + 30;
-const PLAY_MAX_X = WIDTH - PANEL_MARGIN - PANEL_WIDTH - 30;
+const PLAY_MAX_X = WIDTH - PANEL_MARGIN - 
+PANEL_WIDTH - 30;
 
 
 const PLAYER_RADIUS = 14;
@@ -60,13 +64,62 @@ let countdownTimer = 0;
 let globalTime = 0;
 
 
+window.showInstructions = function() {
+  gameState = "instructions";
+  startScreen.style.display = "none";
+  howToPlayScreen.style.display = "flex";
+}
+
+// 설명창에서 'PLAY NOW' 버튼 클릭 시 호출
+window.startGameFromMenu = function() {
+  howToPlayScreen.style.display = "none";
+  gameOverlay.style.display = "flex";
+  startCountdown();
+}
+
+// 키보드 입력 처리
+window.addEventListener("keydown", (e) => {
+  const k = e.key.toLowerCase();
+  keys[k] = true;
+
+  if (gameState === "lobby") {
+    if (e.code === "Space" || e.code === "Enter") {
+      e.preventDefault();
+      window.showInstructions(); // 수정된 함수 호출
+    }
+  } else if (gameState === "instructions") {
+    if (e.code === "Space" || e.code === "Enter") {
+      e.preventDefault();
+      window.startGameFromMenu(); // 수정된 함수 호출
+    }
+  } else if (gameState === "gameover") {
+    if (e.code === "Space" || e.code === "Enter") {
+      e.preventDefault();
+      resetGame(); // resetToLobby 대신 기존에 정의된 resetGame 사용
+    }
+  }
+});
+
+  function showHowToPlay() {
+  gameState = "instructions";
+  startScreen.style.display = "none";
+  howToPlayScreen.style.display = "flex";
+}
+
+function startGameNow() {
+  howToPlayScreen.style.display = "none";
+  gameOverlay.style.display = "flex";
+  startCountdown();
+}
+
 // Particles & Floating Text
 let bubbles = [];
 let floatingTexts = []; // [수정] 실패 텍스트 등 부유 텍스트 관리
 
 
 // --- Player Setup ---
-function createPlayer(id, mainColor, accentColor, finColor, startX) {
+function createPlayer(id, mainColor, accentColor, 
+finColor, startX) {
   return {
     id,
     x: startX,
@@ -374,7 +427,8 @@ function resolveMiniGameFor(playerId) {
     mg.locked = true;
     mg.lockTimer = 2.0;
     const box = playerId === "P1" ? timingP1Box : timingP2Box;
-    const cool = playerId === "P1" ? coolP1 : coolP2;
+    const cool = playerId === "P1" ? coolP1 : 
+coolP2;
    
     box.style.display = "none";
     cool.textContent = `실패! ${mg.lockTimer.toFixed(1)}초 후 재시도`;
@@ -454,7 +508,8 @@ function update(dt) {
 
 
   // 부유 텍스트 업데이트
-  for (let i = floatingTexts.length - 1; i >= 0; i--) {
+  for (let i = floatingTexts.length - 1; i >= 0; 
+i--) {
     let ft = floatingTexts[i];
     ft.life -= dt;
     ft.y += ft.dy * dt;
@@ -550,7 +605,8 @@ function update(dt) {
 
 
       const dist = Math.hypot(mg.player.x - mg.spot.x, mg.player.y - mg.spot.y);
-      if (dist > PLAYER_RADIUS + mg.spot.radius + 20) {
+      if (dist > PLAYER_RADIUS + mg.spot.radius + 
+20) {
          minigames[pid] = null;
          const box = pid === "P1" ? timingP1Box : timingP2Box;
          box.style.display = "none";
@@ -642,7 +698,8 @@ function drawSimpleObjects(dt) {
   if(boat.x>PLAY_MAX_X-40) boat.dir=-1; if(boat.x<PLAY_MIN_X+20) boat.dir=1;
   ctx.save(); translate(ctx, boat.x, boat.y); ctx.scale(boat.dir,1);
   ctx.fillStyle = "#8d6e63"; ctx.beginPath(); ctx.moveTo(-40,0); ctx.lineTo(40,0); ctx.quadraticCurveTo(35,20,20,20); ctx.lineTo(-30,20); ctx.quadraticCurveTo(-45,20,-40,0); ctx.fill();
-  ctx.fillStyle="#eee"; ctx.fillRect(-20,-15,30,15);
+  ctx.fillStyle="#eee"; 
+ctx.fillRect(-20,-15,30,15);
   ctx.fillStyle="#5d4037"; ctx.fillRect(15,-35,4,35);
   ctx.fillStyle="#ff5252"; ctx.beginPath(); ctx.moveTo(19,-35); ctx.lineTo(40,-28); ctx.lineTo(19,-20); ctx.fill();
   ctx.restore();
@@ -732,7 +789,8 @@ function drawDiver(player) {
 
   // [수정] 다리 두 개 복구 및 애니메이션 교차 적용
   // Right Leg
-  ctx.save(); ctx.translate(bodyW/4, bodyH/2); ctx.rotate(0.6+Math.sin(phase + Math.PI)*0.4);
+  ctx.save(); ctx.translate(bodyW/4, bodyH/2); 
+ctx.rotate(0.6+Math.sin(phase + Math.PI)*0.4);
   ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,13); ctx.strokeStyle=player.colorAccent; ctx.stroke();
   ctx.beginPath(); ctx.moveTo(-4,13); ctx.lineTo(4,13); ctx.lineTo(6,19); ctx.lineTo(-6,19); ctx.closePath(); ctx.fillStyle=player.colorFin; ctx.fill(); ctx.restore();
 
@@ -820,7 +878,8 @@ function updateScoreUI() {
   hudP2.classList.toggle("leader", player2.score > player1.score);
 }
 function updateBarsUI() {
-  const hp1 = Math.max(0, player1.hp); const hp2 = Math.max(0, player2.hp);
+  const hp1 = Math.max(0, player1.hp); const hp2 = 
+Math.max(0, player2.hp);
   const o1 = Math.max(0, player1.oxygen / OXYGEN_MAX); const o2 = Math.max(0, player2.oxygen / OXYGEN_MAX);
   hpFillP1.style.transform = `scaleY(${hp1})`; hpFillP2.style.transform = `scaleY(${hp2})`;
   oxygenP1Fill.style.transform = `scaleY(${o1})`; oxygenP2Fill.style.transform = `scaleY(${o2})`;
@@ -836,7 +895,8 @@ function addTrashToInventory(player, trash) {
   if (trash.rarity === "rare") item.classList.add("rare");
  
   const icon = document.createElement("div"); icon.className = "trashIcon"; icon.textContent = trash.icon;
-  const text = document.createElement("div"); text.textContent = `${trash.name} (+${trash.score})`;
+  const text = document.createElement("div"); text.textContent = `${trash.name} 
+(+${trash.score})`;
   item.appendChild(icon); item.appendChild(text);
   parent.insertBefore(item, parent.firstChild);
   while (parent.children.length > 16) parent.removeChild(parent.lastChild);
@@ -915,3 +975,4 @@ function loop(ts) {
 
 resetGame();
 requestAnimationFrame(loop);
+
