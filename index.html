@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ocean Claners</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="1100" height="620"></canvas>
+
+    <!-- 중앙 시간 -->
+    <div id="centerTime"><span id="timerText">02:00</span></div>
+
+    <!-- 상단 HUD -->
+    <div id="hudP1" class="hudBox">
+      <div class="hudTitle">PLAYER 1</div>
+      <div class="hudRow"><span>점수</span><span id="scoreP1">0</span></div>
+    </div>
+
+    <div id="hudP2" class="hudBox">
+      <div class="hudTitle">PLAYER 2</div>
+      <div class="hudRow"><span>점수</span><span id="scoreP2">0</span></div>
+    </div>
+
+    <!-- 왼쪽 패널(P1) -->
+    <div id="panelP1" class="sidePanel">
+      <div class="panelHeader blueGrad">P1 산소 / 체력 / 쓰레기</div>
+
+      <div class="panelContent">
+        <div class="panelStatus">
+          <div class="statusLabelRow">
+            <div class="statusLabel">체력</div>
+            <div class="statusLabel">산소</div>
+          </div>
+
+          <div class="statusBars">
+            <!-- HP -->
+            <div class="vBar">
+              <div class="ticks"></div>
+              <div id="hpFillP1" class="vFill hpFill"></div>
+            </div>
+            <!-- O2 -->
+            <div class="vBar">
+              <div class="ticks"></div>
+              <div id="oxygenP1" class="vFill oxygenFill"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panelTrash">
+          <div class="trashTitle">획득한 쓰레기</div>
+          <div id="invP1" class="trashList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 오른쪽 패널(P2) -->
+    <div id="panelP2" class="sidePanel">
+      <div class="panelHeader pinkGrad">P2 산소 / 체력 / 쓰레기</div>
+
+      <div class="panelContent">
+        <div class="panelStatus">
+          <div class="statusLabelRow">
+            <div class="statusLabel">체력</div>
+            <div class="statusLabel">산소</div>
+          </div>
+
+          <div class="statusBars">
+            <div class="vBar">
+              <div class="ticks"></div>
+              <div id="hpFillP2" class="vFill hpFill"></div>
+            </div>
+            <div class="vBar">
+              <div class="ticks"></div>
+              <div id="oxygenP2" class="vFill oxygenFill"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panelTrash">
+          <div class="trashTitle">획득한 쓰레기</div>
+          <div id="invP2" class="trashList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 중앙 오버레이 -->
+    <div id="overlay">
+      <div id="bigMsg"></div>
+      <div id="smallMsg"></div>
+    </div>
+
+    <!-- 타이밍 바 -->
+    <div id="timingP1" class="timingBox">
+      <div class="timingLabel">P1 수집 타이밍 (W/A/S/D)</div>
+      <div class="timingTrack">
+        <div class="timingRed" id="timingRedP1"></div>
+        <div class="timingPointer" id="timingPointerP1"></div>
+      </div>
+      <div class="timingCool" id="coolP1"></div>
+    </div>
+
+    <div id="timingP2" class="timingBox">
+      <div class="timingLabel">P2 수집 타이밍 (방향키)</div>
+      <div class="timingTrack">
+        <div class="timingRed" id="timingRedP2"></div>
+        <div class="timingPointer" id="timingPointerP2"></div>
+      </div>
+      <div class="timingCool" id="coolP2"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
