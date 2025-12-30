@@ -1,28 +1,17 @@
- const canvas = document.getElementById("gameCanvas");
+const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-
-
 
 
 const WIDTH = canvas.width;
 const HEIGHT = canvas.height;
 
 
-const startScreen = document.getElementById("startScreen");
-const howToPlayScreen = document.getElementById("howToPlayScreen");
-const gameOverlay = document.getElementById("overlay");
-
-
 const gameContainer = document.getElementById("gameContainer");
 const centerTime = document.getElementById("centerTime"); // [수정] 긴장감 효과용
 
 
-
-
 const WATER_LINE = HEIGHT * 0.18;
 const SAND_Y = HEIGHT * 0.82;
-
-
 
 
 const PANEL_MARGIN = 10;
@@ -31,12 +20,8 @@ const PLAY_MIN_X = PANEL_MARGIN + PANEL_WIDTH + 30;
 const PLAY_MAX_X = WIDTH - PANEL_MARGIN - PANEL_WIDTH - 30;
 
 
-
-
 const PLAYER_RADIUS = 14;
 const GAME_TIME = 120; // 2분
-
-
 
 
 // DOM Elements
@@ -56,8 +41,6 @@ const hudP1 = document.getElementById("hudP1");
 const hudP2 = document.getElementById("hudP2");
 
 
-
-
 const timingP1Box = document.getElementById("timingP1");
 const timingP2Box = document.getElementById("timingP2");
 const timingRedP1 = document.getElementById("timingRedP1");
@@ -66,8 +49,6 @@ const timingPointerP1 = document.getElementById("timingPointerP1");
 const timingPointerP2 = document.getElementById("timingPointerP2");
 const coolP1 = document.getElementById("coolP1");
 const coolP2 = document.getElementById("coolP2");
-
-
 
 
 // --- Game State ---
@@ -79,67 +60,9 @@ let countdownTimer = 0;
 let globalTime = 0;
 
 
-
-
-window.showInstructions = function() {
-  gameState = "instructions";
-  startScreen.style.display = "none";
-  howToPlayScreen.style.display = "flex";
-}
-
-
-// 설명창에서 'PLAY NOW' 버튼 클릭 시 호출
-window.startGameFromMenu = function() {
-  howToPlayScreen.style.display = "none";
-  gameOverlay.style.display = "flex";
-  startCountdown();
-}
-
-
-// 키보드 입력 처리
-window.addEventListener("keydown", (e) => {
-  const k = e.key.toLowerCase();
-  keys[k] = true;
-
-
-  if (gameState === "lobby") {
-    if (e.code === "Space" || e.code === "Enter") {
-      e.preventDefault();
-      window.showInstructions(); // 수정된 함수 호출
-    }
-  } else if (gameState === "instructions") {
-    if (e.code === "Space" || e.code === "Enter") {
-      e.preventDefault();
-      window.startGameFromMenu(); // 수정된 함수 호출
-    }
-  } else if (gameState === "gameover") {
-    if (e.code === "Space" || e.code === "Enter") {
-      e.preventDefault();
-      resetGame(); // resetToLobby 대신 기존에 정의된 resetGame 사용
-    }
-  }
-});
-
-
-  function showHowToPlay() {
-  gameState = "instructions";
-  startScreen.style.display = "none";
-  howToPlayScreen.style.display = "flex";
-}
-
-
-function startGameNow() {
-  howToPlayScreen.style.display = "none";
-  gameOverlay.style.display = "flex";
-  startCountdown();
-}
-
-
 // Particles & Floating Text
 let bubbles = [];
 let floatingTexts = []; // [수정] 실패 텍스트 등 부유 텍스트 관리
-
-
 
 
 // --- Player Setup ---
@@ -166,20 +89,14 @@ const player1 = createPlayer("P1", "#00bcd4", "#00838f", "#ffca28", (PLAY_MIN_X 
 const player2 = createPlayer("P2", "#f06292", "#c2185b", "#ffb3c1", (PLAY_MIN_X + PLAY_MAX_X) / 2 + 80);
 
 
-
-
 // --- Spots & Minigames ---
 const spots = [];
 let spotTimer = 0;
 const MAX_SPOTS = 5;
 
 
-
-
 // minigames: { P1: { ..., locked: bool, lockTimer: number }, P2: ... }
 const minigames = { P1: null, P2: null };
-
-
 
 
 // --- Trash Data ---
@@ -195,14 +112,10 @@ const TRASH_COMMON = [
 ];
 
 
-
-
 const TRASH_RARE = [
   { name: "보물 상자", baseScore: 80, icon: "💎", rarity: "rare" },
   { name: "고대 유물", baseScore: 100, icon: "🏺", rarity: "rare" },
 ];
-
-
 
 
 function randTrash(depthFactor) {
@@ -218,8 +131,6 @@ function randTrash(depthFactor) {
 }
 
 
-
-
 // --- Background Decorations ---
 let decorations = {
   clouds: [],
@@ -232,14 +143,10 @@ let decorations = {
 };
 
 
-
-
 // --- Input Handling ---
 window.addEventListener("keydown", (e) => {
   const k = e.key.toLowerCase();
   keys[k] = true;
-
-
 
 
   if (gameState === "lobby" || gameState === "gameover") {
@@ -250,8 +157,6 @@ window.addEventListener("keydown", (e) => {
       return;
     }
   }
-
-
 
 
   if (gameState === "playing" || gameState === "minigame") {
@@ -278,19 +183,13 @@ window.addEventListener("keydown", (e) => {
 window.addEventListener("keyup", (e) => (keys[e.key.toLowerCase()] = false));
 
 
-
-
 canvas.addEventListener("click", () => {
   if (gameState === "lobby") startCountdown();
   else if (gameState === "gameover") resetGame();
 });
 
 
-
-
 // --- Core Logic ---
-
-
 
 
 const OXYGEN_MAX = 1.3;
@@ -299,8 +198,6 @@ const OXYGEN_DRAIN_BASE = 1 / 36;
 // [수정] 체력 로직 상수
 const HP_DAMAGE_BLOCK = 0.1; // 한 칸 (10%)
 const HP_DAMAGE_INTERVAL = 1.8; // 1.8초마다
-
-
 
 
 function createBubble(x, y) {
@@ -313,8 +210,6 @@ function createBubble(x, y) {
 }
 
 
-
-
 // [수정] 실패 텍스트 생성
 function spawnFloatingText(x, y, text, color) {
   floatingTexts.push({
@@ -325,18 +220,12 @@ function spawnFloatingText(x, y, text, color) {
 }
 
 
-
-
 function applyBreathing(player, dt) {
   if (!player.alive) return;
 
 
-
-
   const surfaceY = WATER_LINE - 4;
   const bottomY = SAND_Y - PLAYER_RADIUS - 2;
-
-
 
 
   if (player.y < surfaceY) {
@@ -358,8 +247,6 @@ function applyBreathing(player, dt) {
   }
 
 
-
-
   // [수정] 산소 고갈 시 체력 로직 (계단식 감소)
   if (player.oxygen <= 0) {
     player.hpTimer += dt;
@@ -371,14 +258,10 @@ function applyBreathing(player, dt) {
     }
 
 
-
-
     // 버블 조금
     if (Math.random() < 0.2) {
       createBubble(player.x + (player.facing * 5), player.y - 5);
     }
-
-
 
 
     if (player.hp <= 0) {
@@ -387,12 +270,8 @@ function applyBreathing(player, dt) {
   }
 
 
-
-
   if (player.auraTimer > 0) player.auraTimer -= dt;
 }
-
-
 
 
 // --- Minigame System ---
@@ -402,14 +281,10 @@ function setupMiniGameFor(spot, player, elapsedRatio) {
   }
 
 
-
-
   const depthFactor = spot.depthT;
   const miniRedWidth = Math.max(0.12, 0.40 - (depthFactor * 0.15) - (elapsedRatio * 0.1));
   const miniRedStart = 0.5 - miniRedWidth / 2;
   const miniSpeed = 1.0 + (depthFactor * 1.0) + (elapsedRatio * 0.5);
-
-
 
 
   minigames[player.id] = {
@@ -426,14 +301,10 @@ function setupMiniGameFor(spot, player, elapsedRatio) {
   };
 
 
-
-
   const box = player.id === "P1" ? timingP1Box : timingP2Box;
   const ptr = player.id === "P1" ? timingPointerP1 : timingPointerP2;
   box.style.display = "flex";
   ptr.classList.add("waiting");
-
-
 
 
   gameState = "minigame";
@@ -441,14 +312,10 @@ function setupMiniGameFor(spot, player, elapsedRatio) {
 }
 
 
-
-
 function spawnRareEffect(x, y) {
   const rect = gameContainer.getBoundingClientRect();
   const scaleX = rect.width / WIDTH;
   const scaleY = rect.height / HEIGHT;
-
-
 
 
   for (let i = 0; i < 3; i++) {
@@ -468,18 +335,12 @@ function spawnRareEffect(x, y) {
 }
 
 
-
-
 function resolveMiniGameFor(playerId) {
   const mg = minigames[playerId];
   if (!mg || mg.locked) return;
 
 
-
-
   const inRed = mg.pointer >= mg.redStart && mg.pointer <= mg.redStart + mg.redWidth;
-
-
 
 
   if (inRed) {
@@ -490,20 +351,14 @@ function resolveMiniGameFor(playerId) {
     updateScoreUI();
 
 
-
-
     if (trash.rarity === "rare") {
       mg.player.auraTimer = 1.0;
       spawnRareEffect(mg.player.x, mg.player.y);
     }
 
 
-
-
     const idx = spots.indexOf(mg.spot);
     if (idx >= 0) spots.splice(idx, 1);
-
-
 
 
     minigames[playerId] = null;
@@ -511,11 +366,7 @@ function resolveMiniGameFor(playerId) {
     else timingP2Box.style.display = "none";
 
 
-
-
     if (!minigames["P1"] && !minigames["P2"]) gameState = "playing";
-
-
 
 
   } else {
@@ -534,13 +385,9 @@ function resolveMiniGameFor(playerId) {
 }
 
 
-
-
 // --- Movement ---
 function handleMovement(player, dt, map) {
   if (!player.alive) { player.isMoving = false; return; }
-
-
 
 
   const mg = minigames[player.id];
@@ -550,15 +397,11 @@ function handleMovement(player, dt, map) {
   }
 
 
-
-
   let vx = 0, vy = 0;
   if (keys[map.up]) vy -= 1;
   if (keys[map.down]) vy += 1;
   if (keys[map.left]) vx -= 1;
   if (keys[map.right]) vx += 1;
-
-
 
 
   if (vx || vy) {
@@ -572,15 +415,11 @@ function handleMovement(player, dt, map) {
   } else player.isMoving = false;
 
 
-
-
   const minY = WATER_LINE - 10;
   const maxY = SAND_Y - PLAYER_RADIUS - 2;
   player.y = Math.min(maxY, Math.max(minY, player.y));
   player.x = Math.min(PLAY_MAX_X - PLAYER_RADIUS, Math.max(PLAY_MIN_X + PLAYER_RADIUS, player.x));
 }
-
-
 
 
 // --- Main Loop & Update ---
@@ -593,8 +432,6 @@ function update(dt) {
   timerText.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 
 
-
-
   // [수정] 15초 이하일 때 경고 클래스 추가
   if (timeLeft <= 15 && timeLeft > 0) {
     centerTime.classList.add("warning");
@@ -603,11 +440,7 @@ function update(dt) {
   }
 
 
-
-
   updateBarsUI();
-
-
 
 
   // 버블 업데이트
@@ -620,8 +453,6 @@ function update(dt) {
   }
 
 
-
-
   // 부유 텍스트 업데이트
   for (let i = floatingTexts.length - 1; i >= 0; i--) {
     let ft = floatingTexts[i];
@@ -629,8 +460,6 @@ function update(dt) {
     ft.y += ft.dy * dt;
     if (ft.life <= 0) floatingTexts.splice(i, 1);
   }
-
-
 
 
   if (gameState === "countdown") {
@@ -645,26 +474,18 @@ function update(dt) {
   }
 
 
-
-
   if (gameState === "playing" || gameState === "minigame") {
     handleMovement(player1, dt, { up: "w", down: "s", left: "a", right: "d" });
     handleMovement(player2, dt, { up: "arrowup", down: "arrowdown", left: "arrowleft", right: "arrowright" });
-
-
 
 
     applyBreathing(player1, dt);
     applyBreathing(player2, dt);
 
 
-
-
     if (!player1.alive && !player2.alive) { endGame("draw"); return; }
     if (!player1.alive) { endGame("P2"); return; }
     if (!player2.alive) { endGame("P1"); return; }
-
-
 
 
     if (timeLeft <= 0) {
@@ -675,16 +496,12 @@ function update(dt) {
     }
 
 
-
-
     spotTimer += dt;
     if (spots.length < MAX_SPOTS && spotTimer >= 1.6) {
         const newSpot = createSpot();
         if(newSpot) spots.push(newSpot);
         spotTimer = 0;
     }
-
-
 
 
     // Minigame Trigger
@@ -699,8 +516,6 @@ function update(dt) {
   }
 
 
-
-
   // Update Minigames
   for (const pid of ["P1", "P2"]) {
     const mg = minigames[pid];
@@ -712,8 +527,6 @@ function update(dt) {
     }
 
 
-
-
     if (mg.inputWait > 0) {
       mg.inputWait -= dt;
       if (mg.inputWait <= 0) {
@@ -723,14 +536,10 @@ function update(dt) {
     }
 
 
-
-
     if (!mg.locked) {
       mg.pointer += mg.dir * mg.speed * dt;
       if (mg.pointer > 1) { mg.pointer = 1; mg.dir = -1; }
       if (mg.pointer < 0) { mg.pointer = 0; mg.dir = 1; }
-
-
 
 
       const red = pid === "P1" ? timingRedP1 : timingRedP2;
@@ -738,8 +547,6 @@ function update(dt) {
       red.style.left = `${mg.redStart * 100}%`;
       red.style.width = `${mg.redWidth * 100}%`;
       pointer.style.left = `${mg.pointer * 100}%`;
-
-
 
 
       const dist = Math.hypot(mg.player.x - mg.spot.x, mg.player.y - mg.spot.y);
@@ -762,11 +569,7 @@ function update(dt) {
 }
 
 
-
-
 // --- Render ---
-
-
 
 
 function drawDecorations(dt) {
@@ -778,8 +581,6 @@ function drawDecorations(dt) {
   else skyColor = lerpColor("#1a237e", "#000510", (tRatio - 0.5) * 2);
   ctx.fillStyle = skyColor;
   ctx.fillRect(0, 0, WIDTH, WATER_LINE);
-
-
 
 
   if (tRatio < 0.6) {
@@ -797,8 +598,6 @@ function drawDecorations(dt) {
     ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(0,0, 16, 0, Math.PI*2); ctx.fill();
     ctx.restore();
   }
-
-
 
 
   // [수정] 구름 디자인 변경 (전형적인 구름 모양)
@@ -821,8 +620,6 @@ function drawDecorations(dt) {
   }
 
 
-
-
   // Sea
   const seaTop = lerpColor("#006994", "#001b2e", tRatio);
   const seaBot = lerpColor("#001b2e", "#000000", tRatio);
@@ -834,12 +631,8 @@ function drawDecorations(dt) {
   ctx.fillStyle = "#c7b199"; ctx.fillRect(0, SAND_Y, WIDTH, HEIGHT - SAND_Y);
 
 
-
-
   drawSimpleObjects(dt);
 }
-
-
 
 
 function drawSimpleObjects(dt) {
@@ -853,8 +646,6 @@ function drawSimpleObjects(dt) {
   ctx.fillStyle="#5d4037"; ctx.fillRect(15,-35,4,35);
   ctx.fillStyle="#ff5252"; ctx.beginPath(); ctx.moveTo(19,-35); ctx.lineTo(40,-28); ctx.lineTo(19,-20); ctx.fill();
   ctx.restore();
-
-
 
 
   // Rocks
@@ -875,12 +666,8 @@ function drawSimpleObjects(dt) {
 }
 
 
-
-
 function drawDiver(player) {
   if (!player) return;
-
-
 
 
   if (player.auraTimer > 0) {
@@ -897,8 +684,6 @@ function drawDiver(player) {
   }
 
 
-
-
   ctx.save();
   ctx.translate(player.x, player.y);
  
@@ -911,11 +696,7 @@ function drawDiver(player) {
   ctx.shadowBlur = 0;
 
 
-
-
   ctx.scale(player.facing, 1);
-
-
 
 
   const bodyW = 18, bodyH = 32;
@@ -926,13 +707,9 @@ function drawDiver(player) {
   ctx.fillStyle = "#455a64"; ctx.fillRect(-3.5,-9,7,24); ctx.restore();
 
 
-
-
   // Body
   ctx.fillStyle = player.colorMain; ctx.strokeStyle="#fff"; ctx.lineWidth=2;
   ctx.beginPath(); roundRect(ctx, -bodyW/2, -bodyH/2, bodyW, bodyH, 7); ctx.fill(); ctx.stroke();
-
-
 
 
   // Helmet
@@ -943,20 +720,14 @@ function drawDiver(player) {
   ctx.fillStyle=visor; ctx.fill();
 
 
-
-
   // Arms
   ctx.lineWidth=3; ctx.lineCap="round";
   ctx.save(); ctx.translate(bodyW/2, -bodyH/4); ctx.rotate(0.4+Math.sin(phase)*0.4);
   ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(13,0); ctx.strokeStyle=player.colorMain; ctx.stroke(); ctx.restore();
 
 
-
-
   ctx.save(); ctx.translate(-bodyW/2, -bodyH/4); ctx.rotate(-0.4-Math.sin(phase)*0.4);
   ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-13,0); ctx.strokeStyle=player.colorAccent; ctx.stroke(); ctx.restore();
-
-
 
 
   // [수정] 다리 두 개 복구 및 애니메이션 교차 적용
@@ -966,20 +737,14 @@ function drawDiver(player) {
   ctx.beginPath(); ctx.moveTo(-4,13); ctx.lineTo(4,13); ctx.lineTo(6,19); ctx.lineTo(-6,19); ctx.closePath(); ctx.fillStyle=player.colorFin; ctx.fill(); ctx.restore();
 
 
-
-
   // Left Leg
   ctx.save(); ctx.translate(-bodyW/4, bodyH/2); ctx.rotate(0.6+Math.sin(phase)*0.4);
   ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,13); ctx.strokeStyle=player.colorAccent; ctx.stroke();
   ctx.beginPath(); ctx.moveTo(-4,13); ctx.lineTo(4,13); ctx.lineTo(6,19); ctx.lineTo(-6,19); ctx.closePath(); ctx.fillStyle=player.colorFin; ctx.fill(); ctx.restore();
 
 
-
-
   ctx.restore();
 }
-
-
 
 
 function drawBubbles() {
@@ -993,8 +758,6 @@ function drawBubbles() {
     ctx.stroke();
   }
 }
-
-
 
 
 function drawFloatingTexts() {
@@ -1011,8 +774,6 @@ function drawFloatingTexts() {
     ctx.restore();
   }
 }
-
-
 
 
 // Helpers
@@ -1052,8 +813,6 @@ function roundRect(ctx, x, y, w, h, r) {
 }
 
 
-
-
 // UI Setup
 function updateScoreUI() {
   scoreP1El.textContent = player1.score; scoreP2El.textContent = player2.score;
@@ -1084,8 +843,6 @@ function addTrashToInventory(player, trash) {
 }
 
 
-
-
 // Init Game
 function initDecorations() {
   decorations.clouds = [];
@@ -1098,8 +855,6 @@ function initDecorations() {
   decorations.seaweeds = [];
   for (let i = 0; i < 5; i++) decorations.seaweeds.push({ x: PLAY_MIN_X + 20 + i * 180 + Math.random() * 80, baseY: SAND_Y, h: 40 + Math.random() * 30, sway: Math.random() * 1.2 });
 }
-
-
 
 
 function resetGame() {
@@ -1119,8 +874,6 @@ function resetGame() {
 }
 
 
-
-
 function startCountdown() { gameState = "countdown"; countdownValue = 3; countdownTimer = 0; bigMsg.textContent = "3"; smallMsg.textContent = ""; }
 function startPlaying() { gameState = "playing"; overlay.style.display = "none"; }
 function endGame(id) {
@@ -1130,8 +883,6 @@ function endGame(id) {
   else bigMsg.textContent = `${id === "P1" ? "Player 1" : "Player 2"} 승리!`;
   smallMsg.textContent = `P1: ${player1.score} / P2: ${player2.score}\n클릭하여 재시작`;
 }
-
-
 
 
 // Loop
@@ -1153,8 +904,6 @@ function loop(ts) {
   }
 
 
-
-
   drawDiver(player1);
   drawDiver(player2);
   drawBubbles();
@@ -1164,10 +913,5 @@ function loop(ts) {
 }
 
 
-
-
 resetGame();
 requestAnimationFrame(loop);
-
-
-
