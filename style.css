@@ -1,0 +1,324 @@
+* { box-sizing: border-box; }
+
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background: radial-gradient(circle at top, #003b7a 0, #000814 60%, #000 100%);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color:#fff;
+}
+
+#gameContainer{
+  position:relative;
+  width:1100px;
+  height:620px;
+  border-radius:18px;
+  overflow:hidden;
+  background:#000;
+  box-shadow:0 18px 40px rgba(0,0,0,0.9);
+}
+
+#gameCanvas{ display:block; width:100%; height:100%; }
+
+/* 중앙 타이머 */
+#centerTime{
+  position:absolute;
+  top:14px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:42px;
+  font-weight:900;
+  text-shadow:0 0 12px rgba(0,0,0,0.9);
+  z-index:20;
+}
+
+/* 상단 HUD */
+.hudBox{
+  position:absolute;
+  top:18px;
+  width:210px;                 /* ✅ 조금 넓혀서 덜 답답하게 */
+  padding:10px 12px;
+  border-radius:14px;
+  background:rgba(0,0,0,0.62);
+  backdrop-filter:blur(6px);
+  box-shadow:0 0 12px rgba(0,0,0,0.8);
+  font-size:14px;
+  z-index:25;
+}
+#hudP1{ left:22px; border:1px solid rgba(0,188,212,0.55); }
+#hudP2{ right:22px; border:1px solid rgba(244,143,177,0.55); }
+
+.hudTitle{ font-weight:900; font-size:16px; margin-bottom:4px; }
+.hudRow{ display:flex; justify-content:space-between; }
+
+/* 선두 효과 */
+.hudBox.leader{ box-shadow:0 0 16px rgba(255,235,59,0.95); }
+
+/* 좌/우 패널 */
+.sidePanel{
+  position:absolute;
+  top:104px;                    /* ✅ HUD-패널 간격 */
+  width:200px;                  /* ✅ 패널 폭 소폭 확장(가로 답답함 완화) */
+  height:502px;
+  padding:10px;
+  border-radius:18px;
+  background:rgba(0,0,0,0.56);
+  backdrop-filter:blur(6px);
+  box-shadow:0 0 18px rgba(0,0,0,0.8);
+  display:flex;
+  flex-direction:column;
+  z-index:20;
+}
+#panelP1{ left:10px; }
+#panelP2{ right:10px; }
+
+.panelHeader{
+  font-size:14px;
+  font-weight:900;
+  text-align:center;
+  padding:9px 6px;
+  border-radius:12px;
+  margin-bottom:14px;
+  letter-spacing:0.2px;
+}
+.blueGrad{ background:linear-gradient(90deg,#00bcd4,#00838f); }
+.pinkGrad{ background:linear-gradient(90deg,#f48fb1,#c2185b); }
+
+.panelContent{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  min-height:0;
+}
+
+/* ===== 산소/체력 영역 ===== */
+.panelStatus{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+
+.statusLabelRow{
+  width:100%;
+  display:flex;
+  justify-content:space-around;
+  font-size:13px;
+  font-weight:800;
+  opacity:0.95;
+}
+
+.statusBars{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  width:100%;
+  padding-top:2px;
+}
+
+/* 바 틀 */
+.vBar{
+  position:relative;
+  width:38px;
+  height:270px;
+  background:rgba(0,0,0,0.65);
+  border-radius:999px;
+  overflow:hidden;
+  display:flex;
+  align-items:flex-end;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+/* ✅ 10칸 눈금 */
+.ticks{
+  position:absolute;
+  inset:8px 8px 8px 8px;
+  pointer-events:none;
+  border-radius:999px;
+  background:
+    repeating-linear-gradient(
+      to top,
+      rgba(255,255,255,0.16) 0px,
+      rgba(255,255,255,0.16) 1px,
+      rgba(255,255,255,0.00) 1px,
+      rgba(255,255,255,0.00) calc((100% - 1px) / 10)
+    );
+  mix-blend-mode:screen;
+  opacity:0.9;
+}
+
+/* 채우기 */
+.vFill{
+  width:100%;
+  height:100%;
+  transform-origin:center bottom;
+  transform:scaleY(1);
+  will-change:transform;
+}
+
+/* 산소(초록) */
+.oxygenFill{
+  background: linear-gradient(#66e0ff, #00ff4c);
+}
+
+/* 체력(분홍) */
+.hpFill{
+  background: linear-gradient(#ffd1e8, #ff4fa3, #c2185b);
+}
+
+/* ✅ 낮을 때 깜빡임 경고 */
+.blinkLow{
+  animation: blinkLow 0.55s infinite alternate;
+  filter: drop-shadow(0 0 8px rgba(255,64,129,0.55));
+}
+.blinkLowO2{
+  animation: blinkLow 0.55s infinite alternate;
+  filter: drop-shadow(0 0 8px rgba(0,255,120,0.55));
+}
+@keyframes blinkLow{
+  from{ opacity:1; }
+  to{ opacity:0.35; }
+}
+
+/* ===== 쓰레기 리스트 ===== */
+.panelTrash{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+.trashTitle{
+  font-size:12px;
+  margin-bottom:6px;
+  opacity:0.95;
+}
+.trashList{
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  font-size:11px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  padding-right:8px;           /* 스크롤바 공간 */
+}
+
+/* ✅ 스크롤바(크롬북/크롬 계열) */
+.trashList::-webkit-scrollbar{
+  width:10px;
+}
+.trashList::-webkit-scrollbar-track{
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+}
+.trashList::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg, rgba(255,255,255,0.28), rgba(255,255,255,0.10));
+  border-radius: 999px;
+  border: 2px solid rgba(0,0,0,0.25);
+}
+.trashList::-webkit-scrollbar-thumb:hover{
+  background: linear-gradient(180deg, rgba(255,255,255,0.38), rgba(255,255,255,0.14));
+}
+
+/* (파폭용) */
+.trashList{
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.28) rgba(255,255,255,0.08);
+}
+
+.trashItem{
+  padding:5px 7px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.08);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.trashIcon{
+  width:18px;
+  height:18px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* 오버레이 */
+#overlay{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  pointer-events:none;
+  z-index:30;
+}
+#bigMsg{
+  font-size:44px;
+  font-weight:900;
+  text-shadow:0 0 12px rgba(0,0,0,0.9);
+}
+#smallMsg{
+  margin-top:10px;
+  font-size:20px;
+  white-space:pre-line;
+}
+
+/* 타이밍 바 */
+.timingBox{
+  position:absolute;
+  bottom:16px;
+  width:380px;
+  padding:10px 12px;
+  border-radius:16px;
+  background:rgba(0,0,0,0.8);
+  backdrop-filter:blur(6px);
+  box-shadow:0 0 14px rgba(0,0,0,0.9);
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  z-index:25;
+}
+#timingP1{ left:220px; }
+#timingP2{ right:220px; }
+
+.timingLabel{
+  font-size:13px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+.timingTrack{
+  position:relative;
+  width:100%;
+  height:26px;
+  background:#222;
+  border-radius:13px;
+  overflow:hidden;
+}
+.timingRed{
+  position:absolute;
+  top:0; bottom:0;
+  left:40%;
+  width:20%;
+  background:linear-gradient(90deg,#ff1744,#ff9100);
+}
+.timingPointer{
+  position:absolute;
+  top:-4px; bottom:-4px;
+  width:4px;
+  background:#fff;
+}
+.timingCool{
+  margin-top:6px;
+  font-size:12px;
+  opacity:0.9;
+  min-height:16px;
+}
+
+/* 선택 방지 */
+body, canvas{ user-select:none; }
