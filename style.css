@@ -1,8 +1,6 @@
 * { box-sizing: border-box; }
 
 
-
-
 body {
   margin: 0;
   height: 100vh;
@@ -16,8 +14,6 @@ body {
 }
 
 
-
-
 #gameContainer {
   position: relative;
   width: 1100px;
@@ -29,84 +25,7 @@ body {
 }
 
 
-.fullOverlay {
-  position: absolute; inset: 0; z-index: 100;
-  display: flex; flex-direction: column; justify-content: center; align-items: center;
-  background: radial-gradient(circle at center, rgba(0, 40, 70, 0.98), rgba(0, 5, 15, 1));
-  backdrop-filter: blur(10px);
-  text-align: center;
-}
-
-
-
-
-.mainTitle {
-  font-size: 84px; font-weight: 900; margin: 0;
-  background: linear-gradient(to bottom, #fff, #00bcd4);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 20px rgba(0, 188, 212, 0.6));
-}
-
-
-
-
-.playerShowcase { display: flex; gap: 60px; margin: 40px 0; }
-.showcaseBox {
-  padding: 15px 35px; border: 2px solid; border-radius: 12px; font-weight: 800;
-  animation: floatUI 3s infinite ease-in-out;
-}
-.p1Border { color: #00bcd4; border-color: #00bcd4; box-shadow: 0 0 15px rgba(0,188,212,0.3); }
-.p2Border { color: #f48fb1; border-color: #f48fb1; animation-delay: 1.5s; box-shadow: 0 0 15px rgba(244,143,177,0.3); }
-
-
-
-
-.decoBubble { position: absolute; width: 35px; height: 35px; background: rgba(255,255,255,0.1); border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); animation: floatUI 4s infinite alternate; }
-.decoTrash { position: absolute; font-size: 45px; opacity: 0.5; animation: rotateUI 6s infinite linear; }
-
-
-
-
-/* [신규] 설명창 모달 */
-.instructionModal {
-  background: rgba(0, 10, 20, 0.9); border: 2px solid rgba(255, 255, 255, 0.1);
-  padding: 45px; border-radius: 25px; width: 720px; box-shadow: 0 0 50px rgba(0,0,0,0.8);
-}
-.instructionModal h2 { font-size: 36px; color: #ffca28; margin-top: 0; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
-.ruleGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0; text-align: left; }
-.ruleItem { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border-left: 4px solid #00bcd4; }
-.ruleItem strong { display: block; color: #00bcd4; margin-bottom: 5px; font-size: 16px; }
-.ruleItem p { margin: 0; font-size: 14px; line-height: 1.5; color: #ddd; }
-
-
-
-
-.menuBtn {
-  padding: 16px 50px; font-size: 24px; font-weight: 800; cursor: pointer;
-  background: transparent; color: #fff; border: 3px solid #fff; border-radius: 50px;
-  transition: all 0.2s ease;
-}
-.menuBtn:hover { background: #fff; color: #000; transform: scale(1.05); }
-.menuBtn.primary { border-color: #ffca28; color: #ffca28; }
-.menuBtn.primary:hover { background: #ffca28; color: #000; }
-.btnHint { margin-top: 15px; font-size: 14px; color: #888; }
-
-
-
-
-@keyframes floatUI { from { transform: translateY(0); } to { transform: translateY(-15px); } }
-@keyframes rotateUI { from { transform: rotate(0); } to { transform: rotate(360deg); } }
-
-
-
-
-
-
-
-
 #gameCanvas { display: block; width: 100%; height: 100%; cursor: pointer; }
-
-
 
 
 /* 중앙 타이머 */
@@ -135,8 +54,6 @@ body {
 }
 
 
-
-
 /* [수정] 15초 이하 경고 효과 */
 #centerTime.warning {
   border-color: rgba(255, 23, 68, 0.8);
@@ -153,8 +70,6 @@ body {
 }
 
 
-
-
 /* 상단 HUD */
 .hudBox {
   position: absolute; top: 18px; width: 210px; padding: 10px 12px;
@@ -166,8 +81,6 @@ body {
 .hudTitle { font-weight: 900; font-size: 16px; margin-bottom: 4px; }
 .hudRow { display: flex; justify-content: space-between; }
 .hudBox.leader { box-shadow: 0 0 16px rgba(255,235,59,0.95); }
-
-
 
 
 /* 좌/우 패널 */
@@ -182,16 +95,12 @@ body {
 #panelP2 { right: 10px; }
 
 
-
-
 .panelHeader {
   font-size: 14px; font-weight: 900; text-align: center; padding: 9px 6px;
   border-radius: 12px; margin-bottom: 14px; letter-spacing: 0.2px;
 }
 .blueGrad { background: linear-gradient(90deg, #00bcd4, #00838f); }
 .pinkGrad { background: linear-gradient(90deg, #f48fb1, #c2185b); }
-
-
 
 
 .panelContent {
@@ -206,8 +115,6 @@ body {
 }
 
 
-
-
 .statusLabelRow {
   width: 100%; display: flex; justify-content: space-around;
   font-size: 13px; font-weight: 800; opacity: 0.95;
@@ -217,16 +124,12 @@ body {
 }
 
 
-
-
 .vBar {
   position: relative; width: 38px; height: 100%;
   background: rgba(0,0,0,0.65); border-radius: 999px; overflow: hidden;
   display: flex; align-items: flex-end;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
 }
-
-
 
 
 .ticks {
@@ -242,21 +145,15 @@ body {
 }
 
 
-
-
 /* 체력바는 뚝뚝 끊기므로 transition 제거하여 직관성 높임 */
 .vFill { width: 100%; height: 100%; transform-origin: center bottom; transform: scaleY(1); }
 .hpFill { transition: none; background: linear-gradient(#ffd1e8, #ff4fa3, #c2185b); }
 .oxygenFill { transition: transform 0.2s linear; background: linear-gradient(#66e0ff, #00ff4c); }
 
 
-
-
 .blinkLow { animation: blinkLow 0.55s infinite alternate; filter: drop-shadow(0 0 8px rgba(255,64,129,0.55)); }
 .blinkLowO2 { animation: blinkLow 0.55s infinite alternate; filter: drop-shadow(0 0 8px rgba(0,255,120,0.55)); }
 @keyframes blinkLow { from { opacity: 1; } to { opacity: 0.35; } }
-
-
 
 
 .trashTitle { font-size: 12px; margin-bottom: 6px; opacity: 0.95; font-weight: 700; }
@@ -266,8 +163,6 @@ body {
 }
 .trashList::-webkit-scrollbar { width: 6px; }
 .trashList::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-
-
 
 
 .trashItem {
@@ -282,8 +177,6 @@ body {
 .trashIcon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
 
 
-
-
 #overlay {
   position: absolute; inset: 0; display: flex; flex-direction: column;
   justify-content: center; align-items: center; text-align: center;
@@ -291,8 +184,6 @@ body {
 }
 #bigMsg { font-size: 44px; font-weight: 900; text-shadow: 0 0 12px rgba(0,0,0,0.9); }
 #smallMsg { margin-top: 10px; font-size: 20px; white-space: pre-line; }
-
-
 
 
 /* 타이밍 바 */
@@ -307,8 +198,6 @@ body {
 #timingP2 { right: 280px; }
 
 
-
-
 .timingLabel { font-size: 13px; font-weight: 900; margin-bottom: 6px; }
 .timingTrack {
   position: relative; width: 100%; height: 26px;
@@ -321,8 +210,6 @@ body {
 }
 .timingPointer.waiting { background: #888; }
 .timingCool { margin-top: 6px; font-size: 12px; opacity: 0.9; min-height: 16px; color: #ff5252; }
-
-
 
 
 /* 별 효과 */
@@ -340,6 +227,3 @@ body {
   20% { opacity: 1; }
   100% { opacity: 0; transform: scale(1.2) translateY(-40px); }
 }
-
-
-
