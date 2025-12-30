@@ -9,6 +9,7 @@
   <div id="gameContainer">
     <canvas id="gameCanvas" width="1100" height="620"></canvas>
 
+
     <div id="startScreen" class="fullOverlay">
       <div class="thumbnailDecorations">
         <div class="decoBubble" style="left:10%; top:20%;"></div>
@@ -24,6 +25,7 @@
       <button class="menuBtn" onclick="showInstructions()">GAME START</button>
       <p class="btnHint">클릭 또는 Space를 눌러주세요</p>
     </div>
+
 
     <div id="howToPlayScreen" class="fullOverlay" style="display:none;">
       <div class="instructionModal">
@@ -51,20 +53,24 @@
       </div>
     </div>
 
+
     <div id="centerTime">
       <div class="timerLabel">TIME</div>
       <span id="timerText">02:00</span>
     </div>
+
 
     <div id="hudP1" class="hudBox">
       <div class="hudTitle">PLAYER 1</div>
       <div class="hudRow"><span> 점수 </span><span id="scoreP1">0</span></div>
     </div>
 
+
     <div id="hudP2" class="hudBox">
       <div class="hudTitle">PLAYER 2</div>
       <div class="hudRow"><span> 점수 </span><span id="scoreP2">0</span></div>
     </div>
+
 
     <div id="panelP1" class="sidePanel">
       <div class="panelHeader blueGrad"> P1 STATUS </div>
@@ -92,6 +98,7 @@
       </div>
     </div>
 
+
     <div id="panelP2" class="sidePanel">
       <div class="panelHeader pinkGrad"> P2 STATUS </div>
       <div class="panelContent">
@@ -118,10 +125,12 @@
       </div>
     </div>
 
+
     <div id="overlay">
       <div id="bigMsg"></div>
       <div id="smallMsg"></div>
     </div>
+
 
     <div id="timingP1" class="timingBox">
       <div class="timingLabel"> P1 수집 (W/A/S/D) </div>
@@ -131,6 +140,7 @@
       </div>
       <div class="timingCool" id="coolP1"></div>
     </div>
+
 
     <div id="timingP2" class="timingBox">
       <div class="timingLabel"> P2 수집 (방향키) </div>
@@ -144,3 +154,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
